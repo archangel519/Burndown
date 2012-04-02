@@ -1,0 +1,24 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    grape (0.2.0)
+      hashie (~> 1.2)
+      multi_json
+      multi_xml
+      rack
+      rack-mount
+    hashie (1.2.0)
+    multi_json (1.2.0)
+    multi_xml (0.4.2)
+    rack (1.4.1)
+    rack-mount (0.8.3)
+      rack (>= 1.0.0)
+    shotgun (0.9)
+      rack (>= 1.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  grape
+  shotgun
