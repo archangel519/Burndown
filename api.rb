@@ -12,8 +12,10 @@ class FireBurn < Grape::API
     Rack::Response.new([ response.toJSON ], 200, { "Content-type" => "application/json" }).finish
   end
   
-  resource :test do
-    get :thing do
+  resource :story do
+    get :create do
+      
+      
       response = APIResponse.new()
       response.result = {:success => true}
       response.toJSON

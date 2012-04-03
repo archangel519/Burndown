@@ -10,9 +10,11 @@ GEM
     hashie (1.2.0)
     multi_json (1.2.0)
     multi_xml (0.4.2)
+    mysql (2.8.1)
     rack (1.4.1)
     rack-mount (0.8.3)
       rack (>= 1.0.0)
+    sequel (3.34.1)
     shotgun (0.9)
       rack (>= 1.0)
 
@@ -22,4 +24,6 @@ PLATFORMS
 DEPENDENCIES
   grape
   multi_json
+  mysql
+  sequel
   shotgun
