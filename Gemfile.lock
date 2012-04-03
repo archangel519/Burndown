@@ -21,4 +21,5 @@ PLATFORMS
 
 DEPENDENCIES
   grape
+  multi_json
   shotgun
