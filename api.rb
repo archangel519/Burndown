@@ -1,5 +1,14 @@
 require File.join(File.dirname(__FILE__), "system/api_response.rb")
 require File.join(File.dirname(__FILE__), "system/api_error.rb")
+require File.join(File.dirname(__FILE__), "models/story.rb")
+
+ActiveRecord::Base.establish_connection(
+  :adapter  => "mysql",
+  :host     => "localhost",
+  :username => "burndown",
+  :password => "HappyBunnyFuzzySquirrel",
+  :database => "burndown"
+)
 
 class FireBurn < Grape::API
   version 'v1'
@@ -15,9 +24,9 @@ class FireBurn < Grape::API
   resource :story do
     get :create do
       
-      
+      story = Story.create(:name => 'Story1', :points => 2, :description => 'test description')
       response = APIResponse.new()
-      response.result = {:success => true}
+      response.result = {:data => story}
       response.toJSON
     end
   end
