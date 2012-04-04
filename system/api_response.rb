@@ -3,8 +3,8 @@ require 'json'
 require File.join(File.dirname(__FILE__), "api_error.rb")
 
 class APIResponse
-  def initialize()
-    @result = nil
+  def initialize(data = nil)
+    @result = {:data => data} unless data.nil?
     @error = nil
   end
   

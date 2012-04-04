@@ -21,12 +21,45 @@ class FireBurn < Grape::API
     Rack::Response.new([ response.toJSON ], 200, { "Content-type" => "application/json" }).finish
   end
   
-  resource :story do
-    get :create do
+  resource :stories do
+    post {
+      name = params[:name]
+      points = params[:points].to_i
+      description = params[:description]
+        
+      story = Story.create(:name => name, :points => points, :description => description)
+      response = APIResponse.new(story)
+      response.toJSON
+    }
+    
+    get {
+      stories = Story.all()
+      response = APIResponse.new(stories)
+      response.toJSON
+    }
+    
+    put ":id" do
+      name = params[:name]
+      points = params[:points].to_i
+      description = params[:description]
+              
+      story = Story.find(params[:id])
+      story.name = name
+      story.points = points
+      story.description = description
       
-      story = Story.create(:name => 'Story1', :points => 2, :description => 'test description')
-      response = APIResponse.new()
-      response.result = {:data => story}
+      story.save  
+      response = APIResponse.new(story)
+      response.toJSON
+    end
+    
+    get ":id" do
+      response = APIResponse.new(Story.find(params[:id]))
+      response.toJSON
+    end
+    
+    delete ":id" do
+      response = APIResponse.new(Story.delete(params[:id]))
       response.toJSON
     end
   end
