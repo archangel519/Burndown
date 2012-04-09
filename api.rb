@@ -26,14 +26,19 @@ class FireBurn < Grape::API
       name = params[:name]
       points = params[:points].to_i
       description = params[:description]
-        
-      story = Story.create(:name => name, :points => points, :description => description)
+      
+      story = Story.new
+      story.name = params[:name]  
+      story.points = params[:points]
+      story.description = params[:description]
+      story.save
+      
       response = APIResponse.new(story)
       response.toJSON
     }
     
     get {
-      stories = Story.all()
+      stories = Story.all
       response = APIResponse.new(stories)
       response.toJSON
     }

@@ -1,14 +1,22 @@
 require 'active_record'
 
 class Story < ActiveRecord::Base
-  attr_accessor :id
-  attr_accessor :name
-  attr_accessor :description
-  attr_accessor :points
   
-  validates_uniqueness_of :id
+  has_many :tasks
+  validates_uniqueness_of :id, :name
   
   def points=(value)
-    @points = value.to_i
+    value = value.to_i
+    value = 1 unless value > 0
+    @points = value
+    super
   end
+  
+  #def self.tasks()
+  #  if (@tasks.nil?)
+  #    @tasks = where(story_id => @id)
+  #  end
+  #  
+  #  @tasks
+  #end
 end

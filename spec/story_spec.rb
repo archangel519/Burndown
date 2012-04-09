@@ -29,11 +29,32 @@ describe Story do
       end
       
       context 'with nil' do
-        it "sets #points to 0" do
+        it "sets #points to 1" do
           @story.points = nil
-          @story.points.should eql 0
+          @story.points.should eql 1
         end
       end
+  end
+  
+  describe '#save' do
+    it "calls the right setter method for points" do
+      mock(@story).save { true }
+      @story.points = nil
+      @story.save
+      @story.points.should eql 1
+    end
+  end
+  
+  describe '#create' do
+    it "calls the right setter method for points" do
+      mock(@story).save { true }
+      @story = Story.create(:name => 'Story1')
+      @story.points.should eql 1
+    end
+  end
+  
+  describe "#tasks" do
+    it "gets a list of the tasks for this story"
   end
   
 end  
