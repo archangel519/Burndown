@@ -10,13 +10,18 @@ describe Story do
       :password => "HappyBunnyFuzzySquirrel",
       :database => "burndown"
     )
-    
-    @story = Story.new  
+  end
+  
+  before :each do
+    @story = Story.new
   end
   
   describe "#new" do
-      it "returns a new story object" do        
+      it "returns a new story object" do         
         @story.should be_an_instance_of Story
+      end
+      it "should be valid" do
+        @story.should be_valid
       end
   end
   
@@ -30,28 +35,13 @@ describe Story do
       
       context 'with nil' do
         it "sets #points to 1" do
-          @story.points = nil
+          @story.points = nil 
           @story.points.should eql 1
         end
       end
   end
   
-  describe '#save' do
-    it "calls the right setter method for points" do
-      mock(@story).save { true }
-      @story.points = nil
-      @story.save
-      @story.points.should eql 1
-    end
-  end
   
-  describe '#create' do
-    it "calls the right setter method for points" do
-      mock(@story).save { true }
-      @story = Story.create(:name => 'Story1')
-      @story.points.should eql 1
-    end
-  end
   
   describe "#tasks" do
     it "gets a list of the tasks for this story"
