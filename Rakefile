@@ -19,3 +19,7 @@ namespace :db do
     ActiveRecord::Migrator.migrate("db/migrate", ENV["VERSION"] ? ENV["VERSION"].to_i : nil )
   end
 end
+ 
+task :rspec do
+  sh 'bundle exec rspec -c'
+end
