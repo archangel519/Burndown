@@ -18,7 +18,13 @@ class FireBurn < Grape::API
   rescue_from :all do |e|
     response = APIResponse.new()
     response.error = APIError.new('System Exception', 500, e.message)
-    Rack::Response.new([ response.toJSON ], 200, { "Content-type" => "application/json" }).finish
+    Rack::Response.new([ response.to_json ], 500, { "Content-type" => "application/json" }).finish
+  end
+  
+  resource :error do
+    get {
+      raise 'API Error'
+    }
   end
   
   resource :stories do
@@ -34,38 +40,52 @@ class FireBurn < Grape::API
       story.save
       
       response = APIResponse.new(story)
-      response.toJSON
+      response
     }
     
     get {
       stories = Story.all
       response = APIResponse.new(stories)
-      response.toJSON
+      response
     }
     
     put ":id" do
       name = params[:name]
       points = params[:points].to_i
       description = params[:description]
-              
-      story = Story.find(params[:id])
-      story.name = name
-      story.points = points
-      story.description = description
       
-      story.save  
-      response = APIResponse.new(story)
-      response.toJSON
+      story = Story.find_by_id(params[:id])
+      if story 
+        story.name = name
+        story.points = points
+        story.description = description
+        
+        story.save  
+        response = APIResponse.new(story)
+        response
+      else
+        error!('Story Not Found', 404)
+      end
     end
     
     get ":id" do
-      response = APIResponse.new(Story.find(params[:id]))
-      response.toJSON
+      story = Story.find_by_id(params[:id])
+      if story
+        response = APIResponse.new(story)
+        response
+      else
+        error!('Story Not Found', 404)
+      end
     end
     
     delete ":id" do
-      response = APIResponse.new(Story.delete(params[:id]))
-      response.toJSON
+      story = Story.find_by_id(params[:id])
+      if story
+        response = APIResponse.new(story)
+        response
+      else
+        error!('Story Not Found', 404)
+      end
     end
   end
 end

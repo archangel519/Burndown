@@ -6,8 +6,11 @@ require 'rack/test'
 
 require_relative '../models/story'
 require_relative '../models/task'
+require_relative '../api'
  
 RSpec.configure do |config|
   config.mock_with :rr
   config.include Rack::Test::Methods
 end
+
+def app; FireBurn; end

@@ -4,14 +4,14 @@ require File.join(File.dirname(__FILE__), "api_error.rb")
 
 class APIResponse
   def initialize(data = nil)
-    @result = {:data => data} unless data.nil?
+    @result = data unless data.nil?
     @error = nil
   end
   
   def result=(input)
     if !@error.nil?
       prefix = "Response setResult"
-      message = "Error already set, unable to set result."
+      message = "Error already set, unable to set result." + " Previous Error Message: #{@error.message}"
       @error = APIError.new(prefix, 1, message);
       @result = nil
     else
@@ -22,7 +22,7 @@ class APIResponse
   def result
     if !@error.nil? and !@result.nil?
       prefix = "Response getResult"
-      message = "Error already set, unable to get result."
+      message = "Error already set, unable to get result." + " Previous Error Message: #{@error.message}"
       @error = APIError.new(prefix, 1, message)
       @result = nil
     end
@@ -49,7 +49,7 @@ class APIResponse
     end
   end
 
-  def toJSON
+  def to_json
     jsonObject = Hash.new
     jsonObject[:result] = @result
     jsonObject[:error] = @error
