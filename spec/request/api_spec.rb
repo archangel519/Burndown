@@ -53,7 +53,8 @@ describe FireBurn do
         api_response.error = APIError.new('prefix', 1, 'FIRST ERROR')
         api_response.result = 'THE DATA'
         api_response.result.should be_nil
-        api_response.error.message.should == '[Response setResult 1] - Error already set, unable to set result. Previous Error Message: [prefix 1] - FIRST ERROR'
+        api_response.error.message.should include('Error already set, unable to set result. Previous Error Message:')
+        api_response.error.message.should include('FIRST ERROR')
       end
     end
   end
@@ -64,9 +65,8 @@ describe FireBurn do
         response = get "/v1/stories"
         last_response.status.should == 200
         json_response = JSON.parse(response.body)
-        result = json_response['result']
-        result.should be_an Array
-        result.should have_at_least(1).items
+        json_response['result'].should be_an Array
+        json_response['error'].should be_nil
       end
     end
     describe "GET /v1/stories/1" do
@@ -98,6 +98,27 @@ describe FireBurn do
         response = put "/v1/stories/abc"
         last_response.status.should == 404
         response.body.should == 'Story Not Found'
+      end
+    end
+  end
+  
+  context "Tasks" do
+    describe "GET /v1/tasks?story_id=1" do
+      it "returns an array of tasks" do
+        response = get "/v1/tasks?story_id=1"
+        last_response.status.should == 200
+        json_response = JSON.parse(response.body)
+        json_response['result'].should be_an Array
+        json_response['error'].should be_nil
+      end
+    end
+    describe "GET /v1/tasks" do
+      it "returns an error stating story id is not set" do
+        response = get "/v1/tasks"
+        last_response.status.should == 200
+        json_response = JSON.parse(response.body)
+        json_response['result'].should be_nil
+        json_response['error']['message'].should include('Story ID not specified')
       end
     end
   end

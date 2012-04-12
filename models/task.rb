@@ -1,8 +1,6 @@
 require 'active_record'
 
 class Task < ActiveRecord::Base
-
-  attr_reader :tasks
   
   belongs_to :story
   validates_uniqueness_of :id, :scope => :story_id
@@ -18,8 +16,8 @@ class Task < ActiveRecord::Base
     #round up to nearest .25
     rem = value % 0.25
     value = (value - rem) + 0.25 unless rem == 0
-    @hours = value.round(2).to_f
-    super
+    value = value.round(2).to_f
+    write_attribute(:hours, value)
   end
 
 end

@@ -1,6 +1,7 @@
 require File.join(File.dirname(__FILE__), "system/api_response.rb")
 require File.join(File.dirname(__FILE__), "system/api_error.rb")
 require File.join(File.dirname(__FILE__), "models/story.rb")
+require File.join(File.dirname(__FILE__), "models/task.rb")
 
 ActiveRecord::Base.establish_connection(
   :adapter  => "mysql",
@@ -23,7 +24,7 @@ class FireBurn < Grape::API
   
   resource :error do
     get {
-      raise 'API Error'
+      raise 'API Error' #for testing
     }
   end
   
@@ -44,7 +45,7 @@ class FireBurn < Grape::API
     }
     
     get {
-      stories = Story.all
+      stories = Story.limit(100)
       response = APIResponse.new(stories)
       response
     }
@@ -87,5 +88,38 @@ class FireBurn < Grape::API
         error!('Story Not Found', 404)
       end
     end
+  end
+  
+  resource :tasks do
+    post {      
+      task = Task.new
+      task.story_id = params[:story_id]
+      task.title = params[:title]
+      task.description = params[:description]
+      task.hours = params[:hours]
+      task.owner = params[:owner]
+      
+      if task.save
+        response = APIResponse.new(story)
+      else
+        response = APIResponse.new
+        response.error = APIError.new('NewTask', 1, 'Unable to create new task.')
+      end
+      
+      response
+    }
+    
+    get {
+      id = params[:story_id].to_i
+      if id != 0
+        tasks = Task.find_all_by_story_id(id)
+        response = APIResponse.new(tasks)
+      else
+        response = APIResponse.new
+        response.error = APIError.new('GetTasks', 1, 'Story ID not specified.')
+      end
+
+      response
+    }
   end
 end

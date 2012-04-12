@@ -17,12 +17,4 @@ class Story < ActiveRecord::Base
     def non_zero_points
       self.points = 1 unless self.points
     end
-  
-  #def self.tasks()
-  #  if (@tasks.nil?)
-  #    @tasks = where(story_id => @id)
-  #  end
-  #  
-  #  @tasks
-  #end
 end

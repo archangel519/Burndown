@@ -42,7 +42,9 @@ describe Story do
   end
   
   describe "#tasks" do
-    it "gets a list of the tasks for this story"
+    it "gets a list of the tasks for this story" do
+      @story.should respond_to(:tasks)
+    end
   end
   
 end  
