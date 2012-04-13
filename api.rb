@@ -1,15 +1,14 @@
-require File.join(File.dirname(__FILE__), "system/api_response.rb")
-require File.join(File.dirname(__FILE__), "system/api_error.rb")
-require File.join(File.dirname(__FILE__), "models/story.rb")
-require File.join(File.dirname(__FILE__), "models/task.rb")
+$BASE_CODE_PATH = File.dirname(__FILE__)
+$BASE_CONFIG_PATH = File.join($BASE_CODE_PATH, '/config')
 
-ActiveRecord::Base.establish_connection(
-  :adapter  => "mysql",
-  :host     => "localhost",
-  :username => "burndown",
-  :password => "HappyBunnyFuzzySquirrel",
-  :database => "burndown"
-)
+require File.join($BASE_CODE_PATH, "system/api_response.rb")
+require File.join($BASE_CODE_PATH, "system/api_error.rb")
+require File.join($BASE_CODE_PATH, "models/story.rb")
+require File.join($BASE_CODE_PATH, "models/task.rb")
+
+db_config_path = File.join($BASE_CONFIG_PATH, 'db_config.yml')
+db_config = YAML::load(File.open(db_config_path))
+ActiveRecord::Base.establish_connection(db_config)
 
 class FireBurn < Grape::API
   version 'v1'

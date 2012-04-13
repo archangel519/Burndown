@@ -3,13 +3,10 @@ namespace :db do
   
   task :environment do
     require 'active_record'
-    ActiveRecord::Base.establish_connection(
-      :adapter  => "mysql",
-      :host     => "localhost",
-      :username => "burndown",
-      :password => "HappyBunnyFuzzySquirrel",
-      :database => "burndown"
-    )
+    require 'yaml'
+    db_config_path = File.join(File.dirname(__FILE__), '/config/db_config.yml')
+    db_config = YAML::load(File.open(db_config_path))
+    ActiveRecord::Base.establish_connection(db_config)
   end
   
   task :migrate => :environment do

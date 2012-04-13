@@ -3,13 +3,9 @@ require_relative '../spec_helper'
 describe Sprint do
 
   before :all do
-    ActiveRecord::Base.establish_connection(
-      :adapter  => "mysql",
-      :host     => "localhost",
-      :username => "burndown",
-      :password => "HappyBunnyFuzzySquirrel",
-      :database => "burndown"
-    )
+    db_config_path = File.join($BASE_CONFIG_PATH, 'db_config.yml')
+    db_config = YAML::load(File.open(db_config_path))
+    ActiveRecord::Base.establish_connection(db_config)
   end
   
   before :each do
