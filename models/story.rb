@@ -2,19 +2,21 @@ require 'active_record'
 
 class Story < ActiveRecord::Base
   
+  belongs_to :sprint
   has_many :tasks
-  validates_uniqueness_of :id, :name
+  validates_uniqueness_of :id, :scope => :sprint_id
+  validates_uniqueness_of :title, :scope => :sprint_id
+  validates_presence_of :sprint_id, :title, :points
+  after_initialize :init
   
-  before_validation :non_zero_points
-    
   def points=(value)
     value = value.to_i
     value = 1 unless value > 0
     write_attribute(:points, value)
   end
-    
+      
   private
-    def non_zero_points
-      self.points = 1 unless self.points
+    def init
+      self.points ||= 1
     end
 end
