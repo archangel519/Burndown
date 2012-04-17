@@ -93,6 +93,19 @@ describe FireBurn do
         response.body.should == 'Story Not Found'
       end
     end
+    describe "updating a story" do
+      it "updates the story in the db and returns the updated story" do
+        mock(Story).save { true }
+        current_time = Time.now.strftime("%H:%M:%S")
+        
+        response = put "/v1/stories/1", {'title' => "Title #{current_time}"}
+        last_response.status.should == 200
+        result = JSON.parse(response.body)['result']
+        error = JSON.parse(response.body)['error']
+        error.should be_nil
+        result['story']['title'].should == "Title #{current_time}"
+      end
+    end
     describe "deleting a story that does not exist" do
       it "returns 404 not found" do
         response = put "/v1/stories/abc"

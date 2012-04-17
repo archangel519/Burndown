@@ -45,5 +45,5 @@ describe Story do
       end
     end
   end
-  
+
 end  

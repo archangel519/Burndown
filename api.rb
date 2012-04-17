@@ -29,12 +29,12 @@ class FireBurn < Grape::API
   
   resource :stories do
     post {
-      name = params[:name]
+      title = params[:title]
       points = params[:points].to_i
       description = params[:description]
       
       story = Story.new
-      story.name = params[:name]  
+      story.title = params[:title]  
       story.points = params[:points]
       story.description = params[:description]
       story.save
@@ -49,19 +49,20 @@ class FireBurn < Grape::API
       response
     }
     
-    put ":id" do
-      name = params[:name]
-      points = params[:points].to_i
-      description = params[:description]
-      
+    put ":id" do      
       story = Story.find_by_id(params[:id])
       if story 
-        story.name = name
-        story.points = points
-        story.description = description
+        story.title = params[:title] unless params[:title].nil?
+        story.points = params[:points].to_i unless params[:points].nil?
+        story.description = params[:description] unless params[:description].nil?
         
-        story.save  
-        response = APIResponse.new(story)
+        if story.save  
+          response = APIResponse.new(story)
+        else 
+          response = APIResponse.new
+          response.error = APIError.new('UpdateStory', 1, 'Unable to update story.')
+        end
+        
         response
       else
         error!('Story Not Found', 404)
@@ -81,7 +82,13 @@ class FireBurn < Grape::API
     delete ":id" do
       story = Story.find_by_id(params[:id])
       if story
-        response = APIResponse.new(story)
+        begin 
+          response = APIResponse.new(story.destroy)
+        rescue
+          response = APIResponse.new
+          response.error = APIError.new('DeleteStory', 1, 'Unable to delete story.')
+        end
+        
         response
       else
         error!('Story Not Found', 404)
@@ -107,6 +114,28 @@ class FireBurn < Grape::API
       
       response
     }
+    
+    put ":id" do
+      task = Task.find_by_id_and_story_id(params[:id], params[:story_id])
+      if task 
+        task.title = params[:title] unless params[:title].nil?
+        task.hours = params[:hours] unless params[:hours].nil?
+        task.description =  params[:description] unless params[:description].nil?
+        task.owner =  params[:owner] unless params[:owner].nil?
+        task.story_id =  params[:new_story_id] unless params[:new_story_id].nil?
+          
+        if task.save  
+          response = APIResponse.new(task)
+        else 
+          response = APIResponse.new
+          response.error = APIError.new('UpdateTask', 1, 'Unable to update task.')
+        end
+        
+        response
+      else
+        error!('Story Not Found', 404)
+      end
+    end
     
     get {
       id = params[:story_id].to_i
